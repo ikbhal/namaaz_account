@@ -1,54 +1,27 @@
 <script>
 import {writable} from 'svelte/store';
 import {onMount} from 'svelte';
-import {db} from './firebase';
 import Check from './Check.svelte';
+export let db;
 export let user = '';
-let todayDateString = new Date().toISOString().slice(0,10);
+let todayDateString = new Date().toISOaString().slice(0,10);
 export let checkDate= todayDateString;
-let tags = ["namaaz", "deen"];
-let defaultNamaazListValues = [
-    {
-        label: "Subah",
-        value: false,
-        tags 
-    },
-    {
-        label: "Zuhar",
-        value: false,
-        tags
-    },
-    {
-        label: "Asr",
-        value: false,
-        tags
-    },
-    {
-        label: "Magrib",
-        value: false,
-        tags
-    },
-    {
-        label: "Isha",
-        value: false,
-        tags
-    },
-];
-let namaazListValues = [... defaultNamaazListValues];
-let namaazList = writable(namaazListValues);
+export let defaultCheckListValues = [];
+export let collectionName ;
+let checkListValues = [... defaultCheckListValues];
+let checkList = writable(checkListValues);
 
 const handleCheckClick = (label) => {
     console.log("check clicked ", label);
-    let namaaz = namaazListValues.find(nz => nz.label ==label);
-    console.log("namaaz object", namaaz); 
-    namaaz.value = !namaaz.value;
-    $namaazList = [... namaazListValues];
+    let check= checkListValues.find(nz => nz.label ==label);
+    check.value = !check.value;
+    $checkList = [... checkListValues];
 };
 
 const handleSave = ( ) => {
-    console.log("handle save for user ", user, " values: ", namaazListValues);
-	db.collection(`${user}-namaaz-account`).doc(checkDate).set({
-        namaazListValues
+    console.log("handle save for user ", user, " values: ", checkListValues);
+	db.collection(collectionName).doc(checkDate).set({
+        checkListValues
 	})
 	.then(() => {
 		console.log("Document successfully written!");
@@ -58,21 +31,18 @@ const handleSave = ( ) => {
 	});
 };
 
-const loadNamaazList = async () => {
-    console.log(`${user}-namaaz-account ${checkDate}`)
-    let namaazRef = db.collection(`${user}-namaaz-account`).doc(checkDate);
-  	// let namaazDoc= await namaazRef.get();
-    namaazRef.get().then((doc) => {
+const loadCheckList = async () => {
+    let docRef = db.collection(getCollectionName()).doc(checkDate);
+    docRef.get().then((doc) => {
         if (doc.exists) {
             console.log("Document data:", doc.data());
-            console.log("doc data namaazListValues : ", doc.data().namaazListValues);
-            namaazListValues = [... doc.data().namaazListValues]
-            $namaazList = [... namaazListValues];
+            console.log("doc data checkListValues : ", doc.data().checkListValues);
+            checkListValues = [... doc.data().checkListValues]
+            $checkList = [... checkListValues];
         } else {
-            // doc.data() will be undefined in this case
             console.log("No such document!");
-            namaazListValues = defaultNamaazListValues;
-            $namaazList = [... namaazListValues];
+            checkListValues = defaultCheckListValues;
+            $checkList = [... checkListValues];
         } 
     }).catch((error) => {
         console.log("Error getting document:", error);
@@ -81,7 +51,7 @@ const loadNamaazList = async () => {
 
 
 onMount(async () => {
-	loadNamaazList();
+	loadCheckList();
 });
 
 </script>
@@ -89,9 +59,9 @@ onMount(async () => {
 <div class="checklist">
     <h3>{user} Check List</h3>
     <label>Date:<input type="date" bind:value={checkDate}/></label>
-    {#each $namaazList as namaaz} 
-    <Check label={namaaz.label} value={namaaz.value} 
-        tags = {namaaz.tags||[]}
+    {#each $checkList as check} 
+    <Check label={check.label} value={check.value} 
+        tags = {check.tags||[]}
         handleClick={handleCheckClick} />
     {/each}
     <button type="submit" on:click={handleSave}>Save</button>
