@@ -41,15 +41,15 @@ const getCollectionName = (user) => {
 	<p>Track Namaaz Tracking for family</p>
     <CheckList user='Ikbhal' 
 		db = {db}
-		collectionName={getCollectionName('Ikbhal')}	
+		collectionName={getCollectionName('ikbhal')}	
 		defaultCheckListValues={defaultNamaazListValues} />
     <CheckList user='Sumiya' 
 		db = {db}
-		collectionName={getCollectionName('Sumiya')}	
+		collectionName={getCollectionName('sumiya')}	
 		defaultCheckListValues={defaultNamaazListValues} />
     <CheckList user='Towheed' 
 		db = {db}
-		collectionName={getCollectionName('Towheed')}	
+		collectionName={getCollectionName('towheed')}	
 		defaultCheckListValues={defaultNamaazListValues}   />
 </main>
 

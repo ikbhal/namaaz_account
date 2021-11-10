@@ -4,7 +4,7 @@ import {onMount} from 'svelte';
 import Check from './Check.svelte';
 export let db;
 export let user = '';
-let todayDateString = new Date().toISOaString().slice(0,10);
+let todayDateString = new Date().toISOString().slice(0,10);
 export let checkDate= todayDateString;
 export let defaultCheckListValues = [];
 export let collectionName ;
@@ -32,7 +32,7 @@ const handleSave = ( ) => {
 };
 
 const loadCheckList = async () => {
-    let docRef = db.collection(getCollectionName()).doc(checkDate);
+    let docRef = db.collection(collectionName).doc(checkDate);
     docRef.get().then((doc) => {
         if (doc.exists) {
             console.log("Document data:", doc.data());
