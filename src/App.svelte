@@ -1,7 +1,7 @@
 <script>
 import CheckList from "./CheckList.svelte"; 
 import {db} from './firebase';
-import defaultCheckListValues from './DefaultCheckListValues';
+import defaultCheckListValues from './check/check/DefaultCheckListValues';
 // let tags = ["namaaz", "deen"];
 // let zikrTags = ["namaaz", "zikr", "deen", "easy", "anytime"];
 // let defaultNamaazListValues = [
