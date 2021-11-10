@@ -59,15 +59,27 @@ const handleSave = ( ) => {
 };
 
 const loadNamaazList = async () => {
-    let namaazRef = db.collection(`{user}-namaaz-account`).doc(checkDate);
-  	let namaazDoc= await namaazRef.get();
-    if (namaazDoc && namaazDoc.exists){
-        console.log("namaazDoc.data ", namaazDoc.data());
-        namaazListValues = [... namaazDoc.data()]
-    }else {
-        namaazListValues = defaultNamaazListValues;
-    }
+    console.log(`${user}-namaaz-account ${checkDate}`)
+    let namaazRef = db.collection(`${user}-namaaz-account`).doc(checkDate);
+  	// let namaazDoc= await namaazRef.get();
+    namaazRef.get().then((doc) => {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+            console.log("doc data namaazListValues : ", doc.data().namaazListValues);
+            namaazListValues = [... doc.data().namaazListValues]
+            $namaazList = [... namaazListValues];
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+            namaazListValues = defaultNamaazListValues;
+            $namaazList = [... namaazListValues];
+        } 
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    });
 };
+
+
 onMount(async () => {
 	loadNamaazList();
 });
@@ -79,7 +91,7 @@ onMount(async () => {
     <label>Date:<input type="date" bind:value={checkDate}/></label>
     {#each $namaazList as namaaz} 
     <Check label={namaaz.label} value={namaaz.value} 
-        tags = {namaaz.tags}
+        tags = {namaaz.tags||[]}
         handleClick={handleCheckClick} />
     {/each}
     <button type="submit" on:click={handleSave}>Save</button>
