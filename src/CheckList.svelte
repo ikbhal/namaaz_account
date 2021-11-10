@@ -51,7 +51,7 @@ const loadCheckList = async () => {
 
 
 onMount(async () => {
-	loadCheckList();
+	// loadCheckList(); temporarly not load, some values not in the default, should be retain for display
 });
 
 </script>
