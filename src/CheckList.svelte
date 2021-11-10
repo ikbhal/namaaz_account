@@ -6,29 +6,32 @@ import Check from './Check.svelte';
 export let user = '';
 let todayDateString = new Date().toISOString().slice(0,10);
 export let checkDate= todayDateString;
-// export let handleSave ;
-let subahNamaaz = false;
-let zuhrNamaaz = false;
+let tags = ["namaaz", "deen"];
 let defaultNamaazListValues = [
     {
         label: "Subah",
-        value: false
+        value: false,
+        tags 
     },
     {
         label: "Zuhar",
-        value: false
+        value: false,
+        tags
     },
     {
         label: "Asr",
-        value: false
+        value: false,
+        tags
     },
     {
         label: "Magrib",
-        value: false
+        value: false,
+        tags
     },
     {
         label: "Isha",
-        value: false
+        value: false,
+        tags
     },
 ];
 let namaazListValues = [... defaultNamaazListValues];
@@ -76,7 +79,12 @@ onMount(async () => {
     <label>Date:<input type="date" bind:value={checkDate}/></label>
     {#each $namaazList as namaaz} 
     <Check label={namaaz.label} value={namaaz.value} 
+        tags = {namaaz.tags}
         handleClick={handleCheckClick} />
     {/each}
     <button type="submit" on:click={handleSave}>Save</button>
 </div>
+
+<style>
+
+</style>
